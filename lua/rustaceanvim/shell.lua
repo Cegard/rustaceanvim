@@ -25,8 +25,14 @@ end
 ---@param commands string[]
 ---@return string
 function M.chain_commands(commands)
-  local separator = M.is_windows() and ' | ' or is_nushell() and ';' or ' && '
+  local separator = ' && '
   local ret = ''
+
+  if M.is_windows() then
+    separator = ' | '
+  elseif is_nushell() then
+    separator = ' and '
+  end
 
   for i, value in ipairs(commands) do
     local is_last = i == #commands
