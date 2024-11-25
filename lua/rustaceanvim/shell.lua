@@ -13,11 +13,10 @@ end
 
 ---@return boolean
 local function is_nushell()
-  ---@diagnostic disable-next-line: missing-parameter
-  local shell = vim.uv.os_getenv('SHELL')
   local nu = 'nu'
-  -- Check if $SHELL ends in "nu"
-  return shell ~= nil and shell:sub(-string.len(nu)) == nu
+  ---@diagnostic disable-next-line: missing-parameter
+  local shell = vim.opt.shell or vim.uv.os_getenv('SHELL')
+  return shell ~= nil and shell:sub(-string.len(nu)) == nu -- Check if $SHELL ends in "nu"
 end
 
 ---Get a new command which is a chain of all the old commands
@@ -31,7 +30,7 @@ function M.chain_commands(commands)
   if M.is_windows() then
     separator = ' | '
   elseif is_nushell() then
-    separator = ' and '
+    separator = '; '
   end
 
   for i, value in ipairs(commands) do
